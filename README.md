@@ -1,4 +1,4 @@
-# Impressive Trading Bot with ML
+# UNLIMITEDMO MONEY Trading Bot with ML
 
 A sophisticated, production-quality trading bot using ensemble machine learning models for cryptocurrency and stock trading.
 

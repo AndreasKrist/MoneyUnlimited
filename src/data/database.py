@@ -185,14 +185,19 @@ class TradingDatabase:
                     })
 
         if records:
-            indicators_df = pd.DataFrame(records)
-            indicators_df.to_sql(
-                'indicators',
-                self.conn,
-                if_exists='append',
-                index=False,
-                method='multi'
-            )
+            # Insert in batches to avoid SQL variable limit (SQLite max is ~32k vars)
+            batch_size = 500  # Conservative batch size
+
+            for i in range(0, len(records), batch_size):
+                batch = records[i:i + batch_size]
+                indicators_df = pd.DataFrame(batch)
+                indicators_df.to_sql(
+                    'indicators',
+                    self.conn,
+                    if_exists='append',
+                    index=False,
+                    chunksize=100
+                )
 
             # Remove duplicates
             self.cursor.execute("""
