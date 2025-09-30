@@ -241,13 +241,24 @@ class FeatureEngineering:
         target = self.create_target(df)
         print(f"  ✓ Target created (prediction horizon: {self.prediction_horizon} periods)")
 
+        # Clean features: replace inf with NaN, then fill/drop
+        features = features.replace([np.inf, -np.inf], np.nan)
+
         # Remove rows with NaN in target (last N rows)
         valid_idx = ~target.isna()
         features = features[valid_idx]
         target = target[valid_idx]
 
+        # Remove rows with too many NaN values in features
+        nan_threshold = 0.5  # Drop rows with >50% NaN
+        features = features.dropna(thresh=int(len(features.columns) * nan_threshold))
+        target = target.loc[features.index]
+
+        # Fill remaining NaN with 0
+        features = features.fillna(0)
+
         print(f"\nTotal features: {len(features.columns)}")
-        print(f"Total samples: {len(features)}")
+        print(f"Total samples: {len(features)} (after cleaning)")
         print(f"Target distribution: {target.value_counts().to_dict()}")
 
         return features, target
