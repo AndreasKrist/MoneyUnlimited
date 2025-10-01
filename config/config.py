@@ -23,7 +23,7 @@ DB_PATH = DATA_DIR / "trading_data.db"
 # Data source settings
 DATA_SOURCES = {
     "crypto": {
-        "enabled": False,  # Temporarily disabled - install ccxt to enable
+        "enabled": True,  # Temporarily disabled - install ccxt to enable
         "exchange": "binance",  # Using ccxt
         "symbols": ["BTC/USDT"],
         "timeframes": ["1h", "4h"],
